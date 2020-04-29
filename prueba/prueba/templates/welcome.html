@@ -1,0 +1,56 @@
+<h2>Área para miembros</h2>
+
+<p>
+    Bienvenido <b>{{nombre}}</b>, 
+    esta página es exclusiva para usuarios registrados.
+
+</p>
+<br>
+
+<p>
+    Usted tiene arrendados <b>{{autos_arredandos}}</b> autos, 
+    Hay una flota de un total de <b>{{flota}}</b> autos.
+
+</p>
+ <ul>
+  <li>
+    <label for="name">Cantidad de puertas:</label>
+    <input type="text" id="cantidad_puertas" name="cantidad_puertas">
+  </li>
+  <li>
+    <label for="mail">Tamano:</label>
+    <input type="email" id="tamano" name="tamano">
+  </li>
+  <li>
+    <label for="msg">Diesel:</label>
+    <textarea id="msg" name="diesel"></textarea>
+  </li>
+ </ul>
+ <button id="buscar_autos">Buscar Autos Disponibles</button>
+
+<hr />
+<a href="/logout">Cerrar sesión</a>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+{% block javascript %}
+  <script>
+    $("#buscar_autos").onClick(function () {
+      var diesel = $("#diesel").val();
+      var cant_puertas = $("#cantidad_puertas").val();
+      var tamano = $("#tamano").val();
+
+      $.ajax({
+        url: '/ajax/buscar_autos/',
+        data: {
+          'diesel': diesel,
+          'cant_puertas':cant_puertas,
+          'tamano':tamano
+        },
+        dataType: 'json',
+        success: function (data) {
+          
+        }
+      });
+
+    });
+  </script>
+{% endblock %}
