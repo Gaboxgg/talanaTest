@@ -4,23 +4,37 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as do_login
 from models import Auto , Cliente , HojaDeVida , Reserva
+import datetime
 
 from django.http import JsonResponse
 
+def noArrendado(fecha):
+    if fecha==None or fecha == '': return True
+    
+    horas_anadidas = datetime.timedelta(hours = 2)
+    fecha=fecha+horas_anadidas
+
+    if fecha<dateTime.now():
+        return True
+    else:
+        return False    
+
 def buscar_autos(request):
-    cant_puertas = request.GET.get('cantidad_puertas', None)
+    cant_puertas = request.GET.get('cant_puertas', None)
     diesel = request.GET.get('diesel', None)
     tamano = request.GET.get('tamano', None)
 
     preData = Auto.objects.filter(diesel=diesel,tamano=tamano,puertas=cant_puertas)
 
+
     data = {}
     if len(preData)>0:
         autosStr=""
         for auto in preData:
-            autosStr=autosStr+"##"+auto.modelo+"##"+auto.puertas+"##"+auto.diesel+"##"+\
-            auto.tamano+"**"
-            
+            if noArrendado(auto.arrendado_en):
+                autosStr=autosStr+"##"+auto.modelo+"##"+auto.puertas+"##"+auto.diesel+"##"+\
+                auto.tamano+"##"+str(auto.id)+"**"
+
         data = {
             'autos': autosStr
         }
